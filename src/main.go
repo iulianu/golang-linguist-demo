@@ -5,6 +5,8 @@ import (
 	"goji.io"
 	"goji.io/pat"
 	"encoding/json"
+	"strings"
+	"bytes"
 )
 
 type MungingRequest struct {
@@ -24,7 +26,11 @@ func requestFormat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	mungingReader := strings.NewReader(mr.Text)
+	mungingWriter := bytes.NewBuffer([]byte{})
+
 	pairs, err := ParsePhrasePairStream([]byte(mr.Text))
+	err = ParsePhrasePairReader(mungingWriter, mungingReader)
 	if err != nil {
 		w.WriteHeader(400)
 		return

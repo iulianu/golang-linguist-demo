@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"errors"
 	"strconv"
+	"io"
 )
 
 type Phrase struct {
@@ -83,6 +84,13 @@ func ParsePhrasePairStream(text []byte) ([]PhrasePair, error) {
 		}
 	}
 	return pairs, nil
+}
+
+func ParsePhrasePairReader(w io.Writer, r io.RuneReader) error {
+	re := regexp.MustCompile("(?:\\A|\\s+)PP \\d+ \\d+")
+	//prevTokenStart := 0
+	re.FindReaderIndex(r)
+	return errors.New("Phrase pair syntax error")
 }
 
 func MungedPairs(pairs []PhrasePair) string {
